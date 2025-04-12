@@ -3,11 +3,11 @@ import { sendSMS } from '@/lib/twilio';
 
 export async function GET() {
   try {
-    const testMessage = 'This is a test message with an image from your Next.js application!';
+    const testMessage = 'This is your daily motivational message from the Newspeak House network!';
     const targetPhoneNumber = process.env.TARGET_PHONE_NUMBER!;
     
     // Example image URL - replace with an actual publicly accessible image URL
-    const mediaUrl = 'https://images.unsplash.com/photo-1500622944204-b135684e99fd?q=80&w=1000';
+    const mediaUrl = 'https://newspeak.house/assets/lcpt-logo-b0013ce6892055718541b937d289526b76d9d0c697020488040e47d0982d8d81.png';
     
     await sendSMS(testMessage, targetPhoneNumber, [mediaUrl]);
 
