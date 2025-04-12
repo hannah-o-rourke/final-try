@@ -25,6 +25,8 @@ export async function POST(request: Request) {
     // Upload the file to Supabase Storage
     const { path, url } = await uploadFile(file, `${folderPath}/${file.name}`);
 
+    let finalMessageId = messageId;
+
     // If a message text and ID were provided, create or update a message in the database
     if (message && messageId) {
       const { error } = await supabase
@@ -47,13 +49,15 @@ export async function POST(request: Request) {
     } 
     // If only a message text was provided, create a new message
     else if (message) {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('messages')
         .insert({
           content: message,
           image_paths: [path],
           image_urls: [url]
-        });
+        })
+        .select('id')
+        .single();
 
       if (error) {
         console.error('Error creating message:', error);
@@ -62,6 +66,8 @@ export async function POST(request: Request) {
           { status: 500 }
         );
       }
+
+      finalMessageId = data?.id;
     }
 
     return NextResponse.json({
@@ -69,7 +75,8 @@ export async function POST(request: Request) {
       message: 'File uploaded successfully',
       data: {
         path,
-        url
+        url,
+        messageId: finalMessageId
       }
     });
   } catch (error) {
@@ -117,6 +124,8 @@ export async function PUT(request: Request) {
     const paths = uploadResults.map(result => result.path);
     const urls = uploadResults.map(result => result.url);
 
+    let finalMessageId = messageId;
+
     // If a message text and ID were provided, create or update a message
     if (message && messageId) {
       const { error } = await supabase
@@ -139,13 +148,15 @@ export async function PUT(request: Request) {
     } 
     // If only a message text was provided, create a new message
     else if (message) {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('messages')
         .insert({
           content: message,
           image_paths: paths,
           image_urls: urls
-        });
+        })
+        .select('id')
+        .single();
 
       if (error) {
         console.error('Error creating message:', error);
@@ -154,6 +165,8 @@ export async function PUT(request: Request) {
           { status: 500 }
         );
       }
+
+      finalMessageId = data?.id;
     }
 
     return NextResponse.json({
@@ -161,7 +174,8 @@ export async function PUT(request: Request) {
       message: `${files.length} files uploaded successfully`,
       data: {
         paths,
-        urls
+        urls,
+        messageId: finalMessageId
       }
     });
   } catch (error) {

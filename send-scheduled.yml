@@ -3,7 +3,7 @@ name: Send Scheduled SMS Messages
 on:
   schedule:
     # Runs at 17:55 UTC every day
-    - cron: '55 17 * * *'
+    - cron: '59 17 * * *'
   # Allow manual trigger
   workflow_dispatch:
 
