@@ -1,0 +1,22 @@
+name: Send Scheduled SMS Messages
+
+on:
+  schedule:
+    # Runs at 17:55 UTC every day
+    - cron: '55 17 * * *'
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  send-sms:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Call scheduled-sms endpoint
+        run: |
+          curl -X GET "https://your-app-url.vercel.app/api/scheduled-sms?limit=10" \
+            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}"
+      
+      - name: Report status
+        if: ${{ always() }}
+        run: echo "SMS sending job completed"

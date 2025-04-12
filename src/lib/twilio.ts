@@ -6,13 +6,20 @@ const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER!;
 
 const client = twilio(accountSid, authToken);
 
-export async function sendSMS(message: string, toPhoneNumber: string) {
+export async function sendSMS(message: string, toPhoneNumber: string, mediaUrls?: string[]) {
   try {
-    const response = await client.messages.create({
+    const messageOptions: any = {
       body: message,
       from: twilioPhoneNumber,
       to: toPhoneNumber,
-    });
+    };
+
+    // Add media URLs if provided
+    if (mediaUrls && mediaUrls.length > 0) {
+      messageOptions.mediaUrl = mediaUrls;
+    }
+
+    const response = await client.messages.create(messageOptions);
     return response;
   } catch (error) {
     console.error('Error sending SMS:', error);
