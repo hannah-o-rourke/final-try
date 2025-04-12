@@ -1,24 +1,19 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
 import { sendSMS } from '@/lib/twilio';
 
-export async function GET() {
+export async function POST(request: Request) {
   try {
-    // Fetch data from Supabase
-    const { data, error } = await supabase
-      .from('memories_final')
-      .select('*')
-      .limit(1);
+    const { phoneNumber, message } = await request.json();
 
-    if (error) {
-      throw error;
+    if (!phoneNumber || !message) {
+      return NextResponse.json(
+        { success: false, error: 'Phone number and message are required' },
+        { status: 400 }
+      );
     }
 
-    // Format the message
-    const message = `Daily Update: ${JSON.stringify(data)}`;
-
     // Send SMS
-    await sendSMS(message);
+    await sendSMS(message, phoneNumber);
 
     return NextResponse.json({ success: true, message: 'SMS sent successfully' });
   } catch (error) {
