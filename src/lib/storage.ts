@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { UploadResult } from './types';
 
 // The bucket name to use for uploads
 const BUCKET_NAME = 'message-images';
@@ -9,7 +10,7 @@ const BUCKET_NAME = 'message-images';
  * @param path Optional path within the bucket
  * @returns The full path and public URL of the uploaded file
  */
-export async function uploadFile(file: File, path?: string): Promise<{ path: string; url: string }> {
+export async function uploadFile(file: File, path?: string): Promise<UploadResult> {
   try {
     // Generate a unique filename if not provided
     const filename = path || `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
@@ -48,7 +49,7 @@ export async function uploadFile(file: File, path?: string): Promise<{ path: str
 export async function uploadMultipleFiles(
   files: File[],
   basePath?: string
-): Promise<Array<{ path: string; url: string }>> {
+): Promise<UploadResult[]> {
   const uploadPromises = files.map(file => {
     const path = basePath ? `${basePath}/${file.name.replace(/\s+/g, '_')}` : undefined;
     return uploadFile(file, path);

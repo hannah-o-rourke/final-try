@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { sendSMS } from '@/lib/twilio';
 import { getPublicUrl } from '@/lib/storage';
+import { Message } from '@/lib/types';
 
 export async function GET(request: Request) {
   try {
@@ -43,7 +44,7 @@ export async function GET(request: Request) {
 
     // Process each message
     const results = await Promise.all(
-      messages.map(async (message) => {
+      messages.map(async (message: Message) => {
         // Check if the message has images
         let mediaUrls: string[] = [];
         

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { uploadFile } from '@/lib/storage';
+import { Message, UploadResult } from '@/lib/types';
 
 export async function POST(request: Request) {
   try {
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
           image_paths: [path],
           image_urls: [url],
           updated_at: new Date().toISOString()
-        });
+        } as Partial<Message>);
 
       if (error) {
         console.error('Error creating message:', error);
@@ -55,7 +56,7 @@ export async function POST(request: Request) {
           content: message,
           image_paths: [path],
           image_urls: [url]
-        })
+        } as Partial<Message>)
         .select('id')
         .single();
 
@@ -136,7 +137,7 @@ export async function PUT(request: Request) {
           image_paths: paths,
           image_urls: urls,
           updated_at: new Date().toISOString()
-        });
+        } as Partial<Message>);
 
       if (error) {
         console.error('Error updating message:', error);
@@ -154,7 +155,7 @@ export async function PUT(request: Request) {
           content: message,
           image_paths: paths,
           image_urls: urls
-        })
+        } as Partial<Message>)
         .select('id')
         .single();
 

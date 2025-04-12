@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { sendSMS } from '@/lib/twilio';
 import { getPublicUrl } from '@/lib/storage';
+import { Message } from '@/lib/types';
 
 // Helper function to fetch and send messages
 async function fetchAndSendMessage(messageId: string | null, phoneNumber: string | null) {
@@ -17,7 +18,7 @@ async function fetchAndSendMessage(messageId: string | null, phoneNumber: string
   }
 
   // Query to fetch message data
-  let query = supabase.from('messages');
+  let query = supabase.from('messages').select('*');
   
   // If messageId is provided, fetch that specific message
   // Otherwise, fetch the latest message
@@ -28,7 +29,7 @@ async function fetchAndSendMessage(messageId: string | null, phoneNumber: string
   }
 
   // Execute the query
-  const { data: messageData, error: messageError } = await query.select('*');
+  const { data: messageData, error: messageError } = await query;
 
   if (messageError || !messageData || messageData.length === 0) {
     console.error('Error fetching message:', messageError);
@@ -39,7 +40,7 @@ async function fetchAndSendMessage(messageId: string | null, phoneNumber: string
     };
   }
 
-  const message = messageData[0];
+  const message = messageData[0] as Message;
 
   // Check if the message has images
   let mediaUrls: string[] = [];

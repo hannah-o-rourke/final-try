@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Call scheduled-sms endpoint
         run: |
-          curl -X GET "https://your-app-url.vercel.app/api/scheduled-sms?limit=10" \
+          curl -X GET "https://final-try-git-master-hannahs-projects-0a533762.vercel.app/api/scheduled-sms?limit=10" \
             -H "Authorization: Bearer ${{ secrets.API_TOKEN }}"
       
       - name: Report status
