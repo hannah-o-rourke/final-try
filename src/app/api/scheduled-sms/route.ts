@@ -33,12 +33,13 @@ export async function GET(request: Request) {
         { status: 500 }
       );
     }
-
+    
     if (!messages || messages.length === 0) {
       return NextResponse.json({
         success: true,
         message: 'No new messages to send',
-        count: 0
+        count: 0,
+        messages
       });
     }
 
