@@ -18,18 +18,12 @@ async function fetchAndSendMessage(messageId: string | null, phoneNumber: string
   }
 
   // Query to fetch message data
-  let query = supabase.from('messages').select('*');
-  
-  // If messageId is provided, fetch that specific message
-  // Otherwise, fetch the latest message
-  if (messageId) {
-    query = query.eq('id', messageId);
-  } else {
-    query = query.order('created_at', { ascending: false }).limit(1);
-  }
+const query = messageId
+  ? supabase.from('messages').select('*').eq('id', messageId)
+  : supabase.from('messages').select('*').order('created_at', { ascending: false }).limit(1);
 
-  // Execute the query
-  const { data: messageData, error: messageError } = await query;
+const { data: messageData, error: messageError } = await query;
+
 
   if (messageError || !messageData || messageData.length === 0) {
     console.error('Error fetching message:', messageError);
